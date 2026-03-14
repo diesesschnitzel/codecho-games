@@ -48,9 +48,9 @@ export async function onRequest(context) {
   });
 }
 
-// GET /api/scores?game=neon-einmaleins&period=daily|weekly|alltime
+// GET /api/scores?game=neon-math&period=daily|weekly|alltime
 async function handleGet(url, env) {
-  const game   = url.searchParams.get('game')   || 'neon-einmaleins';
+  const game   = url.searchParams.get('game')   || 'neon-math';
   const period = url.searchParams.get('period') || 'weekly';
 
   const now   = Math.floor(Date.now() / 1000);
@@ -98,7 +98,7 @@ async function handlePost(request, env) {
   }
   
   const parsedScore = Number(score);
-  if (!Number.isInteger(parsedScore) || parsedScore <= 0 || parsedScore > 99999) {
+  if (!Number.isInteger(parsedScore) || parsedScore < 0 || parsedScore > 99999) {
     return new Response('Invalid score: Must be a positive integer below 1M', { status: 400 });
   }
 
