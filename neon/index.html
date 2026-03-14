@@ -121,9 +121,6 @@
         <p class="leaderboard__empty" id="lbEmpty" style="display:none"></p>
       </div>
 
-      <a href="../" style="display:block; margin-top:2rem; color: var(--text-muted); font-size:0.85rem;">
-        ← Zurück zur Spieleübersicht
-      </a>
     </div>
   </div>
 
@@ -163,14 +160,9 @@
     let lang = 'DE';
     const DE_COUNTRIES = ['DE', 'AT', 'CH', 'LU', 'LI'];
 
-    async function detectLanguage() {
-      try {
-        const res = await fetch('/api/geo');
-        const { country } = await res.json();
-        lang = DE_COUNTRIES.includes(country) ? 'DE' : 'EN';
-      } catch {
-        lang = 'DE';
-      }
+    function detectLanguage() {
+      const browserLang = (navigator.language || 'de').slice(0, 2).toUpperCase();
+      lang = DE_COUNTRIES.includes(browserLang) ? 'DE' : 'EN';
     }
 
     function applyLanguage() {
@@ -186,7 +178,8 @@
       document.getElementById('lbLoading').textContent      = s.lbLoading;
     }
 
-    detectLanguage().then(applyLanguage);
+    detectLanguage();
+    applyLanguage();
 
     // ── Start game ────────────────────────────────────────────
     document.getElementById('startBtn').addEventListener('click', startGame);

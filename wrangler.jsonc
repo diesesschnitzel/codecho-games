@@ -1,5 +1,5 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
   "name": "codecho-game",
   "compatibility_date": "2025-09-27",
   "observability": {
@@ -10,5 +10,12 @@
   },
   "compatibility_flags": [
     "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "scoreboard_neonmath",
+      "database_id": "eb8febfc-29b9-433b-802e-ca9c0560f3ae"
+    }
   ]
 }
