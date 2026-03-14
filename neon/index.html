@@ -3,21 +3,304 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neon Einmaleins — CODECHO Games</title>
+  <title>Neon Einmaleins</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; background: #000; }
-    iframe {
+    /* ── Leaderboard ───────────────────────────────────── */
+    .leaderboard {
+      margin-top: 2rem;
       width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
+      max-width: 360px;
     }
+    .leaderboard__tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+    .lb-tab {
+      background: transparent;
+      border: 1px solid var(--text-muted, #666);
+      color: var(--text-muted, #666);
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .lb-tab.active {
+      background: var(--accent, #fff);
+      border-color: var(--accent, #fff);
+      color: var(--bg, #000);
+    }
+    .leaderboard__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .leaderboard__list li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.88rem;
+    }
+    .leaderboard__list li:last-child { border-bottom: none; }
+    .lb-rank {
+      width: 1.6rem;
+      text-align: right;
+      color: var(--text-muted, #666);
+      font-size: 0.75rem;
+    }
+    .lb-rank.gold   { color: #ffd700; font-weight: 700; }
+    .lb-rank.silver { color: #c0c0c0; font-weight: 700; }
+    .lb-rank.bronze { color: #cd7f32; font-weight: 700; }
+    .lb-name  { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lb-score { font-weight: 700; }
+    .lb-me    { color: var(--accent, #fff); }
+    .leaderboard__empty {
+      text-align: center;
+      color: var(--text-muted, #666);
+      font-size: 0.85rem;
+      padding: 1rem 0;
+    }
+    .lb-loading { text-align: center; color: var(--text-muted, #666); font-size: 0.8rem; }
   </style>
 </head>
 <body>
-  <!-- Drop the Neon Math game file into this folder as "game.html"
-       and it will load here at full screen. -->
-  <iframe src="game.html" title="Neon Einmaleins" allowfullscreen></iframe>
+
+  <!-- ── Screen 1: Name input ────────────── -->
+  <div class="name-screen" id="nameScreen">
+    <div class="name-box">
+      <p class="name-box__num">02 — NEON EINMALEINS</p>
+      <h2 id="titleText"></h2>
+      <input
+        type="text"
+        id="nameInput"
+        maxlength="40"
+        autocomplete="off"
+        autofocus
+      >
+      <button class="btn" id="startBtn"></button>
+    </div>
+  </div>
+
+  <!-- ── Screen 2: Game iframe ───────────── -->
+  <div class="game-frame" id="gameFrame">
+    <iframe
+      id="gameIframe"
+      src=""
+      title="Neon Einmaleins"
+      allow="fullscreen"
+    ></iframe>
+  </div>
+
+  <!-- ── Screen 3: Score + Leaderboard ──── -->
+  <div class="score-screen" id="scoreScreen">
+    <div class="score-box">
+      <div class="score-box__emoji">⭐</div>
+      <h2 id="scoreTitle"></h2>
+      <p id="scoreName"></p>
+      <div class="score-big" id="scoreBig">—</div>
+      <p id="saveStatus" class="score-saved" style="display:none"></p>
+      <p id="saveError"  class="score-error" style="display:none"></p>
+
+      <!-- Leaderboard -->
+      <div class="leaderboard" id="leaderboard">
+        <div class="leaderboard__tabs">
+          <button class="lb-tab active" data-period="daily"   id="tabDaily"></button>
+          <button class="lb-tab"        data-period="weekly"  id="tabWeekly"></button>
+          <button class="lb-tab"        data-period="alltime" id="tabAlltime"></button>
+        </div>
+        <p class="lb-loading" id="lbLoading"></p>
+        <ul class="leaderboard__list" id="lbList"></ul>
+        <p class="leaderboard__empty" id="lbEmpty" style="display:none"></p>
+      </div>
+
+      <a href="../" style="display:block; margin-top:2rem; color: var(--text-muted); font-size:0.85rem;">
+        ← Zurück zur Spieleübersicht
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const GAME_NAME = 'neon-einmaleins';
+
+    const STRINGS = {
+      DE: {
+        title:          'Wie heißt du?',
+        namePlaceholder:'Dein Name',
+        startBtn:       'Spielen →',
+        scoreTitle:     'Runde beendet!',
+        scoreSaved:     'Punktzahl gespeichert ✓',
+        scoreError:     'Speichern fehlgeschlagen',
+        tabDaily:       'Heute',
+        tabWeekly:      'Woche',
+        tabAlltime:     'Alle Zeiten',
+        lbLoading:      'Lade …',
+        lbEmpty:        'Noch keine Einträge',
+      },
+      EN: {
+        title:          'What is your name?',
+        namePlaceholder:'Your name',
+        startBtn:       'Play →',
+        scoreTitle:     'Round over!',
+        scoreSaved:     'Score saved ✓',
+        scoreError:     'Could not save score',
+        tabDaily:       'Today',
+        tabWeekly:      'This week',
+        tabAlltime:     'All time',
+        lbLoading:      'Loading …',
+        lbEmpty:        'No entries yet',
+      }
+    };
+
+    // ── Language detection ────────────────────────────────────
+    let lang = 'DE';
+    const DE_COUNTRIES = ['DE', 'AT', 'CH', 'LU', 'LI'];
+
+    async function detectLanguage() {
+      try {
+        const res = await fetch('/api/geo');
+        const { country } = await res.json();
+        lang = DE_COUNTRIES.includes(country) ? 'DE' : 'EN';
+      } catch {
+        lang = 'DE';
+      }
+    }
+
+    function applyLanguage() {
+      const s = STRINGS[lang];
+      document.documentElement.lang = lang.toLowerCase();
+      document.getElementById('titleText').textContent      = s.title;
+      document.getElementById('nameInput').placeholder      = s.namePlaceholder;
+      document.getElementById('startBtn').textContent       = s.startBtn;
+      document.getElementById('scoreTitle').textContent     = s.scoreTitle;
+      document.getElementById('tabDaily').textContent       = s.tabDaily;
+      document.getElementById('tabWeekly').textContent      = s.tabWeekly;
+      document.getElementById('tabAlltime').textContent     = s.tabAlltime;
+      document.getElementById('lbLoading').textContent      = s.lbLoading;
+    }
+
+    detectLanguage().then(applyLanguage);
+
+    // ── Start game ────────────────────────────────────────────
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('nameInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') startGame();
+    });
+
+    function startGame() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) { document.getElementById('nameInput').focus(); return; }
+      window._playerName = name;
+      document.getElementById('nameScreen').style.display = 'none';
+      document.getElementById('gameFrame').style.display  = 'block';
+      document.getElementById('gameIframe').src = './game/';
+    }
+
+    // ── postMessage from game iframe ──────────────────────────
+    window.addEventListener('message', async function(event) {
+      if (!event.data || event.data.type !== 'MATH_GAME_OVER') return;
+
+      const { score } = event.data;
+      const name = window._playerName || '?';
+
+      document.getElementById('gameFrame').style.display  = 'none';
+      document.getElementById('scoreScreen').style.display = 'flex';
+      document.getElementById('scoreName').textContent = name;
+      document.getElementById('scoreBig').textContent  = score ?? '—';
+
+      // Save to D1
+      try {
+        const res = await fetch('/api/scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ student_name: name, game: GAME_NAME, score: score ?? 0 })
+        });
+        if (res.ok) {
+          const el = document.getElementById('saveStatus');
+          el.textContent = STRINGS[lang].scoreSaved;
+          el.style.display = 'block';
+        } else throw new Error(`HTTP ${res.status}`);
+      } catch (err) {
+        const el = document.getElementById('saveError');
+        el.textContent = STRINGS[lang].scoreError;
+        el.style.display = 'block';
+        console.error('Score save failed:', err);
+      }
+
+      // Load leaderboard (default: daily)
+      loadLeaderboard('daily');
+    });
+
+    // ── Leaderboard ───────────────────────────────────────────
+    let currentPeriod = 'daily';
+
+    document.querySelectorAll('.lb-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lb-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadLeaderboard(btn.dataset.period);
+      });
+    });
+
+    async function loadLeaderboard(period) {
+      currentPeriod = period;
+      const loading = document.getElementById('lbLoading');
+      const list    = document.getElementById('lbList');
+      const empty   = document.getElementById('lbEmpty');
+      const s       = STRINGS[lang];
+
+      loading.textContent = s.lbLoading;
+      loading.style.display = 'block';
+      list.innerHTML = '';
+      empty.style.display = 'none';
+
+      try {
+        const res = await fetch(`/api/scores?game=${GAME_NAME}&period=${period}`);
+        const { entries } = await res.json();
+        loading.style.display = 'none';
+
+        if (!entries || entries.length === 0) {
+          empty.textContent  = s.lbEmpty;
+          empty.style.display = 'block';
+          return;
+        }
+
+        const playerName = (window._playerName || '').toLowerCase();
+        const rankClasses = ['gold', 'silver', 'bronze'];
+
+        entries.forEach((entry, i) => {
+          const li   = document.createElement('li');
+          const isMe = entry.student_name.toLowerCase() === playerName;
+          if (isMe) li.classList.add('lb-me');
+
+          const rankEl = document.createElement('span');
+          rankEl.className = 'lb-rank' + (rankClasses[i] ? ' ' + rankClasses[i] : '');
+          rankEl.textContent = '#' + (i + 1);
+
+          const nameEl = document.createElement('span');
+          nameEl.className = 'lb-name';
+          nameEl.textContent = entry.student_name;
+
+          const scoreEl = document.createElement('span');
+          scoreEl.className = 'lb-score';
+          scoreEl.textContent = entry.score;
+
+          li.append(rankEl, nameEl, scoreEl);
+          list.appendChild(li);
+        });
+      } catch (err) {
+        loading.style.display = 'none';
+        console.error('Leaderboard load failed:', err);
+      }
+    }
+  </script>
+
 </body>
 </html>

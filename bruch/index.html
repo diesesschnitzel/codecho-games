@@ -10,12 +10,11 @@
 </head>
 <body>
 
-  <!-- ── Step 1: Name input ─────────────── -->
+  <!-- ── Screen 1: Name input ────────────── -->
   <div class="name-screen" id="nameScreen">
     <div class="name-box">
       <p class="name-box__num">01 — BRUCHRECHNEN MEISTER</p>
       <h2>Wie heißt du?</h2>
-      <p id="classHint">Dein Lehrer sieht dein Ergebnis.</p>
 
       <input
         type="text"
@@ -29,7 +28,7 @@
     </div>
   </div>
 
-  <!-- ── Step 2: Game iframe ────────────── -->
+  <!-- ── Screen 2: Game iframe ───────────── -->
   <div class="game-frame" id="gameFrame">
     <iframe
       id="gameIframe"
@@ -39,11 +38,11 @@
     ></iframe>
   </div>
 
-  <!-- ── Step 3: Score screen ──────────── -->
+  <!-- ── Screen 3: Score screen ──────────── -->
   <div class="score-screen" id="scoreScreen">
     <div class="score-box">
       <div class="score-box__emoji">🏆</div>
-      <h2 id="scoreTitle">Gut gespielt!</h2>
+      <h2>Gut gespielt!</h2>
       <p id="scoreName"></p>
       <div class="score-big" id="scoreBig">—</div>
       <p id="scoreDetail"></p>
@@ -56,30 +55,10 @@
   </div>
 
   <script>
-    // ── Config ────────────────────────────
-    const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
-    const SUPABASE_KEY  = 'YOUR_SUPABASE_ANON_KEY';
-    const GAME_ORIGIN   = 'https://bruchrechnen-meister-248296775029.us-west1.run.app';
-    const GAME_NAME     = 'bruchrechnen-meister';
+    const GAME_ORIGIN = 'https://bruchrechnen-meister-248296775029.us-west1.run.app';
+    const GAME_NAME   = 'bruchrechnen-meister';
 
-    // ── Read URL params ───────────────────
-    const params     = new URLSearchParams(window.location.search);
-    const classCode  = params.get('class') || '';
-    const urlName    = params.get('name')  || '';
-
-    if (urlName) {
-      document.getElementById('nameInput').value = urlName;
-    }
-
-    if (classCode) {
-      document.getElementById('classHint').textContent =
-        `Klasse: ${classCode} — Dein Lehrer sieht dein Ergebnis.`;
-    } else {
-      document.getElementById('classHint').textContent =
-        'Kein Klassencode — Ergebnis wird nicht gespeichert.';
-    }
-
-    // ── Start game ────────────────────────
+    // ── Start game ────────────────────────────────────────────
     document.getElementById('startBtn').addEventListener('click', startGame);
     document.getElementById('nameInput').addEventListener('keydown', e => {
       if (e.key === 'Enter') startGame();
@@ -90,58 +69,42 @@
       if (!name) { document.getElementById('nameInput').focus(); return; }
       window._playerName = name;
       document.getElementById('nameScreen').style.display = 'none';
-      const frame = document.getElementById('gameFrame');
-      frame.style.display = 'block';
+      document.getElementById('gameFrame').style.display = 'block';
       document.getElementById('gameIframe').src = GAME_ORIGIN;
     }
 
-    // ── Listen for postMessage from Cloud Run game ─────
+    // ── postMessage from Cloud Run game (cross-origin: check required) ──
     window.addEventListener('message', async function(event) {
       if (event.origin !== GAME_ORIGIN) return;
       if (!event.data || event.data.type !== 'MATH_GAME_OVER') return;
 
       const { score, highScore, level } = event.data;
-      const name = window._playerName || urlName || '?';
+      const name = window._playerName || '?';
 
       document.getElementById('gameFrame').style.display = 'none';
-      const ss = document.getElementById('scoreScreen');
-      ss.style.display = 'flex';
-
+      document.getElementById('scoreScreen').style.display = 'flex';
       document.getElementById('scoreName').textContent  = name;
       document.getElementById('scoreBig').textContent   = score ?? '—';
       document.getElementById('scoreDetail').textContent =
         highScore != null ? `Highscore: ${highScore}` : '';
 
-      if (classCode && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-        try {
-          const res = await fetch(`${SUPABASE_URL}/rest/v1/scores`, {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({
-              class_code:   classCode,
-              student_name: name,
-              game:         GAME_NAME,
-              score:        score     ?? 0,
-              high_score:   highScore ?? 0,
-              level:        String(level ?? '')
-            })
-          });
-          if (res.ok) {
-            const el = document.getElementById('saveStatus');
-            el.textContent = '✓ Ergebnis gespeichert';
-            el.style.display = 'block';
-          } else throw new Error(`HTTP ${res.status}`);
-        } catch (err) {
-          const el = document.getElementById('saveError');
-          el.textContent = 'Ergebnis konnte nicht gespeichert werden.';
+      // ── Save to Cloudflare D1 ─────────────────────────────
+      try {
+        const res = await fetch('/api/scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ student_name: name, game: GAME_NAME, score: score ?? 0 })
+        });
+        if (res.ok) {
+          const el = document.getElementById('saveStatus');
+          el.textContent = '✓ Ergebnis gespeichert';
           el.style.display = 'block';
-          console.error('Score save failed:', err);
-        }
+        } else throw new Error(`HTTP ${res.status}`);
+      } catch (err) {
+        const el = document.getElementById('saveError');
+        el.textContent = 'Ergebnis konnte nicht gespeichert werden.';
+        el.style.display = 'block';
+        console.error('Score save failed:', err);
       }
     });
   </script>
