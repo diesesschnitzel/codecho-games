@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <!-- Space background -->
+  <rect width="800" height="450" fill="#080818"/>
+
+  <!-- Stars -->
+  <circle cx="42"  cy="28"  r="1.2" fill="#fff" opacity="0.8"/>
+  <circle cx="130" cy="67"  r="0.8" fill="#fff" opacity="0.6"/>
+  <circle cx="210" cy="19"  r="1.4" fill="#fff" opacity="0.9"/>
+  <circle cx="320" cy="44"  r="0.9" fill="#fff" opacity="0.5"/>
+  <circle cx="445" cy="31"  r="1.1" fill="#fff" opacity="0.7"/>
+  <circle cx="570" cy="15"  r="1.3" fill="#fff" opacity="0.8"/>
+  <circle cx="660" cy="52"  r="0.8" fill="#fff" opacity="0.6"/>
+  <circle cx="750" cy="29"  r="1.0" fill="#fff" opacity="0.7"/>
+  <circle cx="78"  cy="140" r="0.9" fill="#fff" opacity="0.5"/>
+  <circle cx="690" cy="110" r="1.2" fill="#fff" opacity="0.8"/>
+  <circle cx="740" cy="200" r="0.8" fill="#fff" opacity="0.6"/>
+  <circle cx="30"  cy="300" r="1.1" fill="#fff" opacity="0.7"/>
+  <circle cx="110" cy="380" r="0.9" fill="#fff" opacity="0.5"/>
+  <circle cx="760" cy="360" r="1.3" fill="#fff" opacity="0.8"/>
+  <circle cx="600" cy="410" r="0.8" fill="#fff" opacity="0.6"/>
+
+  <!-- HUD top bar -->
+  <rect x="0" y="0" width="800" height="52" fill="#0D1033" opacity="0.95"/>
+  <text x="24" y="33" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" fill="#00FFAA" letter-spacing="2">NEON EINMALEINS</text>
+  <text x="640" y="33" font-family="'JetBrains Mono', monospace" font-size="12" fill="#00FFAA">SCORE: 1240</text>
+
+  <!-- Enemy ships (pink squares) -->
+  <rect x="80"  y="90" width="48" height="48" rx="4" fill="#FF0088" opacity="0.9"/>
+  <text x="104" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#fff">6</text>
+
+  <rect x="200" y="90" width="48" height="48" rx="4" fill="#FF0088" opacity="0.9"/>
+  <text x="224" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#fff">9</text>
+
+  <rect x="480" y="90" width="48" height="48" rx="4" fill="#FF0088" opacity="0.7"/>
+  <text x="504" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#fff">4</text>
+
+  <rect x="640" y="90" width="48" height="48" rx="4" fill="#FF0088" opacity="0.8"/>
+  <text x="664" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#fff">7</text>
+
+  <!-- Center glow -->
+  <circle cx="400" cy="240" r="110" fill="#00FFAA" opacity="0.04"/>
+  <circle cx="400" cy="240" r="80"  fill="#00FFAA" opacity="0.05"/>
+
+  <!-- Main equation -->
+  <text x="400" y="210" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="72" font-weight="800" fill="#00FFAA"
+        style="filter: drop-shadow(0 0 12px #00FFAA)">7 × 8</text>
+  <text x="400" y="285" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="72" font-weight="800" fill="#FFFFFF">= ?</text>
+
+  <!-- Player ship at bottom -->
+  <polygon points="400,390 375,420 425,420" fill="#00FFAA" opacity="0.9"/>
+  <rect x="393" y="415" width="14" height="20" fill="#00FFAA" opacity="0.6"/>
+
+  <!-- Answer bar -->
+  <rect x="200" y="350" width="400" height="44" rx="22" fill="none" stroke="#00FFAA" stroke-width="2" opacity="0.7"/>
+  <text x="400" y="378" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="14" fill="#00FFAA" opacity="0.6">Antwort eingeben …</text>
+</svg>

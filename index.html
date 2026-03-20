@@ -19,7 +19,7 @@
 
     <div class="card">
       <div class="card__preview">
-        <span>➗</span>
+        <img src="game-1.svg" alt="Bruchrechnen Meister Screenshot" loading="lazy">
       </div>
       <div class="card__body">
         <span class="card__num">01</span>
@@ -31,7 +31,7 @@
 
     <div class="card">
       <div class="card__preview">
-        <span>✖️</span>
+        <img src="game-2.svg" alt="Neon Einmaleins Screenshot" loading="lazy">
       </div>
       <div class="card__body">
         <span class="card__num">02</span>
@@ -47,5 +47,21 @@
     <p>Made with ♥ by <a href="https://codecho.de">codecho.de</a></p>
   </footer>
 
+  <!-- Consent Banner -->
+  <div id="consent-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#0e0e1a;border-top:1px solid #2a2a45;padding:0.9rem 1.5rem;align-items:center;justify-content:space-between;gap:1rem;z-index:9999;font-size:0.8rem;">
+    <span style="color:#8888aa;">Diese Site verwendet Cloudflare (Hosting + Scoreboard-Datenbank) und Google Fonts.
+      Highscores werden mit deinem gewählten Namen gespeichert.
+      <a href="/impressum/" style="color:#a855f7;margin-left:0.4rem;">Datenschutz</a>
+    </span>
+    <button onclick="document.getElementById('consent-banner').style.display='none';localStorage.setItem('consent_games','1')"
+      style="background:#7c3aed;color:#fff;border:none;padding:0.4rem 1.2rem;border-radius:6px;cursor:pointer;font-size:0.8rem;white-space:nowrap;flex-shrink:0;">
+      OK
+    </button>
+  </div>
+  <script>
+    if (!localStorage.getItem('consent_games')) {
+      document.getElementById('consent-banner').style.display = 'flex';
+    }
+  </script>
 </body>
 </html>

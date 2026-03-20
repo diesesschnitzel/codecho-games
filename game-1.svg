@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="#F4EFE3"/>
+
+  <!-- Top bar -->
+  <rect x="0" y="0" width="800" height="56" fill="#1A5C38"/>
+  <text x="28" y="36" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" fill="#DFF0E6" letter-spacing="2">BRUCHRECHNEN MEISTER</text>
+  <text x="720" y="36" font-family="'JetBrains Mono', monospace" font-size="13" fill="#DFF0E6">⏱ 0:45</text>
+
+  <!-- Score pills -->
+  <rect x="28" y="74" width="110" height="32" rx="4" fill="#DFF0E6"/>
+  <text x="44" y="95" font-family="'JetBrains Mono', monospace" font-size="11" fill="#1A5C38" font-weight="700">PUNKTE: 320</text>
+  <rect x="152" y="74" width="90" height="32" rx="4" fill="#DFF0E6"/>
+  <text x="168" y="95" font-family="'JetBrains Mono', monospace" font-size="11" fill="#1A5C38" font-weight="700">LEVEL 3</text>
+
+  <!-- Main card -->
+  <rect x="180" y="118" width="440" height="260" rx="6" fill="#FFFFFF" stroke="#D4C9B0" stroke-width="1.5"/>
+
+  <!-- Question label -->
+  <text x="400" y="155" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#7A7060" letter-spacing="3">AUFGABE</text>
+
+  <!-- Fraction equation: 3/4 + 1/2 = ? -->
+  <!-- 3/4 -->
+  <text x="256" y="218" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="48" font-weight="800" fill="#1A1810">3</text>
+  <rect x="226" y="228" width="60" height="3" fill="#1A5C38"/>
+  <text x="256" y="270" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="48" font-weight="800" fill="#1A1810">4</text>
+
+  <!-- + -->
+  <text x="340" y="250" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="40" font-weight="700" fill="#1A5C38">+</text>
+
+  <!-- 1/2 -->
+  <text x="420" y="218" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="48" font-weight="800" fill="#1A1810">1</text>
+  <rect x="390" y="228" width="60" height="3" fill="#1A5C38"/>
+  <text x="420" y="270" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="48" font-weight="800" fill="#1A1810">2</text>
+
+  <!-- = -->
+  <text x="504" y="250" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="40" font-weight="700" fill="#1A5C38">=</text>
+
+  <!-- ? -->
+  <text x="572" y="250" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="48" font-weight="800" fill="#C17B2A">?</text>
+
+  <!-- Answer input area -->
+  <rect x="220" y="295" width="360" height="48" rx="4" fill="#F4EFE3" stroke="#1A5C38" stroke-width="2"/>
+  <text x="400" y="326" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" fill="#7A7060">Antwort eingeben …</text>
+
+  <!-- Timer bar -->
+  <rect x="0" y="418" width="800" height="32" fill="#EDE7D8"/>
+  <rect x="0" y="418" width="520" height="32" fill="#1A5C38"/>
+  <text x="400" y="439" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#DFF0E6" letter-spacing="1">ZEIT</text>
+</svg>
