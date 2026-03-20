@@ -51,8 +51,8 @@ export async function onRequest(context) {
   const isGerman = lang.startsWith('de');
 
   const prompt = isGerman
-    ? `Du hilfst einem Schüler beim Einmaleins üben. Er hat diese Aufgaben verpasst: ${problemList}. Erkläre in 2-3 kurzen Sätzen auf Deutsch, wie man sich diese Ergebnisse merken kann. Nutze Merkhilfen oder Muster. Kein Intro, direkt starten.`
-    : `You're helping a student practice multiplication. They missed: ${problemList}. Give 2-3 short friendly tips to remember these results. Use memory tricks. No intro, start directly.`;
+    ? `Du hilfst einem Schüler beim Einmaleins. Er hat verpasst: ${problemList}. Schreib genau einen kurzen Merksatz auf Deutsch. Kein Markdown, keine Sternchen, keine Aufzählung.`
+    : `Help a student remember: ${problemList}. Write exactly one short tip. No markdown, no asterisks, no lists.`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
